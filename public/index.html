@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f6f7f8">
+  <title>StockPilot — Inventory alerts</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./styles.css">
+  <script src="./app.js" defer></script>
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" aria-label="Main navigation">
+      <a class="brand" href="#overview" aria-label="StockPilot home">
+        <span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 32 32"><path d="M6 23.5 13.5 16l4.8 4.8L27 12"/><path d="M19.5 12H27v7.5"/></svg></span>
+        <span class="brand-name">stockpilot<span>®</span></span>
+      </a>
+      <div class="store-switcher">
+        <span class="store-avatar">K</span>
+        <span class="store-copy"><strong>Kōra Studio</strong><small data-i18n="demoStore">Demo store</small></span>
+        <span class="chevron">⌄</span>
+      </div>
+      <p class="nav-label" data-i18n="workspace">WORKSPACE</p>
+      <nav>
+        <a class="nav-item active" href="#overview"><span class="nav-icon">◫</span><span data-i18n="overview">Overview</span></a>
+        <a class="nav-item" href="#inventory"><span class="nav-icon">▦</span><span data-i18n="inventory">Inventory</span></a>
+        <a class="nav-item" href="#alerts"><span class="nav-icon">◉</span><span data-i18n="alerts">Alerts</span><span id="nav-count" class="nav-count">0</span></a>
+      </nav>
+      <div class="sidebar-bottom">
+        <div class="plan-card"><span class="plan-spark">✳</span><strong data-i18n="planTitle">Stay ahead of stockouts</strong><p data-i18n="planCopy">StockPilot keeps your next restock in view.</p><a href="#inventory"><span data-i18n="exploreInventory">Explore inventory</span> <span>↗</span></a></div>
+        <button class="nav-item settings-button" type="button" id="settings-button"><span class="nav-icon">⚙</span><span data-i18n="settings">Settings</span></button>
+        <div class="profile"><span class="profile-avatar">CM</span><span><strong>Carlos Martinez</strong><small data-i18n="storeOwner">Store owner</small></span><span class="profile-menu">···</span></div>
+      </div>
+    </aside>
+
+    <main class="main-content" id="overview">
+      <header class="topbar">
+        <div class="breadcrumbs"><span data-i18n="apps">Apps</span><span>/</span><strong>StockPilot</strong></div>
+        <div class="topbar-right"><span class="connection"><i></i><span data-i18n="connection">Shopify demo data</span></span><button class="help-button" type="button" aria-label="Help" data-i18n-aria="help">?</button></div>
+      </header>
+      <section class="page-wrap">
+        <div class="demo-banner"><span class="demo-pill">DEMO</span><span data-i18n="demoNotice">Sample inventory is shown here. Shopify sync isn’t connected yet.</span><a href="#about-demo"><span data-i18n="demoInfo">How this demo works</span> <span>↗</span></a></div>
+        <div class="page-heading">
+          <div><p class="eyebrow" id="today-date"></p><h1 data-i18n="pageTitle">Inventory overview</h1><p class="heading-sub" data-i18n="pageSub">A clear view of what needs your attention.</p></div>
+          <button class="primary-button" id="review-all" type="button"><span>✓</span><span data-i18n="reviewAll">Review all alerts</span></button>
+        </div>
+
+          <div class="stats-grid" aria-label="Inventory summary" data-i18n-aria="summary">
+          <button class="stat-card" type="button" data-card-view="all" aria-label="Show all tracked variants"><span class="stat-top"><span data-i18n="trackedVariants">Tracked variants</span><span class="stat-icon pale">▦</span></span><span class="stat-value" id="stat-tracked">—</span><span class="stat-foot" data-i18n="acrossCatalog">Across your catalog</span></button>
+          <button class="stat-card" type="button" data-card-view="low" aria-label="Show low stock variants"><span class="stat-top"><span data-i18n="lowStock">Low stock</span><span class="stat-icon amber">↘</span></span><span class="stat-value" id="stat-low">—</span><span class="stat-foot"><span class="tiny-status amber-dot"></span><span data-i18n="atOrBelow">At or below threshold</span></span></button>
+          <button class="stat-card" type="button" data-card-view="out" aria-label="Show out of stock variants"><span class="stat-top"><span data-i18n="outStock">Out of stock</span><span class="stat-icon red">⊘</span></span><span class="stat-value" id="stat-out">—</span><span class="stat-foot"><span class="tiny-status red-dot"></span><span data-i18n="needsRestock">Needs a restock</span></span></button>
+          <button class="stat-card highlight" type="button" data-card-view="alerts" aria-label="Show open alerts"><span class="stat-top"><span data-i18n="openAlerts">Open alerts</span><span class="stat-icon dark">⌁</span></span><span class="stat-value" id="stat-alerts">—</span><span class="stat-foot" data-i18n="awaitingReview">Waiting for your review</span></button>
+        </div>
+
+        <section class="content-card alerts-card" id="alerts">
+          <div class="section-heading"><div><div class="title-row"><h2 data-i18n="needsAttention">Needs attention</h2><span id="alert-badge" class="count-badge">0</span></div><p data-i18n="alertSub">Items at or below their restock threshold.</p></div><button class="text-button" id="show-all" type="button"><span data-i18n="viewInventory">View inventory</span> <span>→</span></button></div>
+          <div id="alert-list" class="alert-list" aria-live="polite"></div>
+        </section>
+
+        <section class="content-card activity-card" id="activity">
+          <div class="section-heading"><div><h2 data-i18n="recentActivity">Recent activity</h2><p data-i18n="activitySub">The latest changes to your demo inventory and alerts.</p></div><span class="activity-live"><i></i><span data-i18n="demoActivity">Demo activity</span></span></div>
+          <ol id="activity-list" class="activity-list" aria-live="polite"></ol>
+        </section>
+
+        <section class="content-card inventory-card" id="inventory">
+          <div class="section-heading inventory-heading"><div><h2 data-i18n="inventoryHealth">Inventory health</h2><p data-i18n="inventorySub">Stock levels by product variant.</p></div><div class="table-actions"><label class="search-box"><span>⌕</span><input id="search" type="search" placeholder="Search products" aria-label="Search products" data-i18n-placeholder="searchProducts" data-i18n-aria="searchProducts"></label><select id="filter" aria-label="Filter inventory" data-i18n-aria="filterInventory"><option value="all" data-i18n="allInventory">All inventory</option><option value="attention" data-i18n="needsAttentionFilter">Needs attention</option><option value="low" data-i18n="lowStock">Low stock</option><option value="out" data-i18n="outStock">Out of stock</option><option value="healthy" data-i18n="healthy">Healthy</option></select><button class="export-button" type="button" id="export-inventory" data-i18n="exportCsv">Export CSV</button></div></div>
+          <div class="table-scroll"><table><thead><tr><th data-i18n="product">PRODUCT</th><th>SKU</th><th data-i18n="location">LOCATION</th><th data-i18n="available">AVAILABLE</th><th data-i18n="status">STATUS</th><th data-i18n="threshold">THRESHOLD</th><th></th></tr></thead><tbody id="inventory-body"></tbody></table></div>
+          <div class="table-footer"><span id="row-count">Loading inventory…</span><span><span data-i18n="demoInventory">Demo inventory</span> <span class="footer-dot">&#9679;</span></span></div>
+        </section>
+
+        <footer class="page-footer" id="about-demo"><span>StockPilot <b>·</b> <span data-i18n="footerProduct">Inventory intelligence for Shopify</span></span><span data-i18n="footerDemo">Portfolio prototype · Demo data only</span></footer>
+      </section>
+    </main>
+  </div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <dialog class="settings-dialog" id="settings-dialog" aria-labelledby="settings-title">
+    <form method="dialog" id="settings-form">
+      <div class="dialog-heading"><div><p class="eyebrow" data-i18n="preferences">PREFERENCES</p><h2 id="settings-title" data-i18n="settings">Settings</h2></div><button class="dialog-close" value="cancel" aria-label="Close settings">×</button></div>
+      <label class="setting-label" for="language-select" data-i18n="language">Language</label>
+      <p class="setting-help" data-i18n="languageHelp">Choose the language for the StockPilot interface.</p>
+      <select id="language-select"><option value="en">English</option><option value="es">Español</option></select>
+      <div class="dialog-actions"><button class="secondary-button" value="cancel" data-i18n="cancel">Cancel</button><button class="primary-button" id="save-settings" type="button" data-i18n="save">Save changes</button></div>
+    </form>
+  </dialog>
+</body>
+</html>
