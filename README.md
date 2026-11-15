@@ -47,3 +47,7 @@ The intended first production version is read-only: it observes inventory and he
 ## Portfolio framing
 
 Present this project as **Shopify Inventory Operations Dashboard — Functional Prototype**. It demonstrates the dashboard interaction model, inventory-alert logic, bilingual UI, and CSV workflow. Keep the simulated-data disclosure visible until OAuth, the Admin API, webhooks, and persistence are implemented.
+<img width="1876" height="950" alt="Captura de pantalla 2026-11-15 145109" src="https://github.com/user-attachments/assets/40b78a59-c602-496c-9298-163b738190d1" />
+
+<img width="1868" height="951" alt="Captura de pantalla 2026-11-15 145056" src="https://github.com/user-attachments/assets/60218f3a-1f50-4370-9680-3f1d4668a49e" />
+
